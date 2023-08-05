@@ -1,0 +1,23 @@
+name: user_cards
+description: A new Flutter project.
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  connectivity_plus: ^4.0.2
+  flutter:
+    sdk: flutter
+  get: ^4.6.5
+  http: ^1.1.0
+  shared_preferences: ^2.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
