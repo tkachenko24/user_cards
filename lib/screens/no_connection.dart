@@ -2,8 +2,7 @@ import 'package:user_cards/export.dart';
 
 class NoConnectionScreen extends StatelessWidget {
   final VoidCallback onRetry;
-
-  NoConnectionScreen({required this.onRetry});
+  const NoConnectionScreen({super.key, required this.onRetry});
 
   @override
   Widget build(BuildContext context) {

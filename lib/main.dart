@@ -14,7 +14,7 @@ void main() {
 class UsersApp extends StatelessWidget {
   final UserController userController;
 
-  const UsersApp({required this.userController});
+  const UsersApp({super.key, required this.userController});
 
   @override
   Widget build(BuildContext context) {

@@ -2,7 +2,6 @@ import 'package:http/http.dart' as http;
 import 'package:user_cards/export.dart';
 
 class UserController extends GetxController {
-  // Зберігатимемо стан з'єднання з мережею та наявності даних
   var hasInternet = false.obs;
   var hasData = false.obs;
 
@@ -22,7 +21,6 @@ class UserController extends GetxController {
 
     if (hasInternet.value) {
       await fetchUsersDataFromApi();
-      print('fetch');
       if (usersData.isNotEmpty) {
         hasData.value = true;
       } else {
@@ -31,7 +29,6 @@ class UserController extends GetxController {
     } else {
       final String usersDataString = prefs.getString('usersData') ?? '';
       hasData.value = usersDataString.isNotEmpty;
-
       if (hasData.value) {
         await fetchUsersDataFromLocal();
       }
@@ -46,15 +43,14 @@ class UserController extends GetxController {
       if (response.statusCode == 200) {
         Map<String, dynamic> data = jsonDecode(response.body);
         usersData.value = List<Map<String, dynamic>>.from(data['data']);
-        saveUsersDataToLocal(data['data']);
+
+        saveUsersDataToLocal(usersData);
         hasData.value = true;
       } else {
         hasData.value = false;
-        // Handle error, show a toast, snackbar, or an error message
       }
     } catch (e) {
       hasData.value = false;
-      // Handle error, show a toast, snackbar, or an error message
     }
   }
 
@@ -64,14 +60,15 @@ class UserController extends GetxController {
     if (usersDataString.isNotEmpty) {
       List<dynamic> data = jsonDecode(usersDataString);
       usersData.value = List<Map<String, dynamic>>.from(data);
+      hasData.value = true;
     } else {
       hasData.value = false;
     }
   }
 
-  void saveUsersDataToLocal(List<Map<String, dynamic>> data) async {
+  void saveUsersDataToLocal(RxList<Map<String, dynamic>> data) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove('usersData');
-    prefs.setString('usersData', jsonEncode(data));
+    prefs.setString('usersData', jsonEncode(data.toList()));
   }
 }
