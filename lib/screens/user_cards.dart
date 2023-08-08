@@ -7,78 +7,61 @@ class UserCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      if (_userController.isLoading.value) {
-        return Scaffold(
-          appBar: AppBar(title: const Text('User Cards')),
-          body: const Center(child: CircularProgressIndicator()),
-        );
-      } else {
-        if (_userController.hasInternet.value) {
-          if (_userController.hasData.value) {
-            return Scaffold(
-                appBar: AppBar(title: const Text('User Cards')),
-                body: PageView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: _userController.usersData.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DetailCard(
-                                user: _userController.usersData[index]),
-                          ),
-                        );
-                      },
-                      child: Card(
-                        margin: const EdgeInsets.fromLTRB(50, 200, 50, 200),
-                        elevation: 5,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            CircleAvatar(
-                              radius: 50,
-                              backgroundImage: NetworkImage(
-                                  _userController.usersData[index]['avatar']),
-                            ),
-                            Text(
-                              '${_userController.usersData[index]['first_name']} ${_userController.usersData[index]['last_name']}',
-                              textAlign: TextAlign.center,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              _userController.usersData[index]['email'],
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ));
-          } else {
-            return NoConnectionScreen(
-              onRetry: () async {
-                _userController.fetchUsersDataFromLocal();
-              },
-            );
-          }
+    return Scaffold(
+      appBar: AppBar(title: const Text('User Cards')),
+      body: Obx(() {
+        if (_userController.usersData.isEmpty) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         } else {
-          return NoConnectionScreen(
-            onRetry: () async {
-              await _userController.checkInternetConnection();
-              _userController.hasInternet.value
-                  ? null
-                  : ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("Turn on internet and try again")));
+          return PageView.builder(
+            physics: const BouncingScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            itemCount: _userController.usersData.length,
+            itemBuilder: (context, index) {
+              final userData = _userController.usersData[index];
+              final hasInternet = _userController.hasInternet.value;
+
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailCard(user: userData),
+                    ),
+                  );
+                },
+                child: Card(
+                  margin: const EdgeInsets.fromLTRB(50, 200, 50, 200),
+                  elevation: 5,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      if (!hasInternet)
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundImage: NetworkImage(userData['avatar']),
+                        )
+                      else
+                        const Text("No internet connection"),
+                      Text(
+                        '${userData['first_name']} ${userData['last_name']}',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        userData['email'],
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              );
             },
           );
         }
-      }
-    });
+      }),
+    );
   }
 }

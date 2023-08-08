@@ -7,6 +7,7 @@ class DetailCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final UserController userController = Get.put(UserController());
     return Scaffold(
       appBar: AppBar(title: const Text('User Details')),
       body: Center(
@@ -22,10 +23,16 @@ class DetailCard extends StatelessWidget {
               const SizedBox(height: 8),
               Text('Email: ${user['email']}'),
               const SizedBox(height: 8),
-              CircleAvatar(
-                backgroundImage: NetworkImage(user['avatar']),
-                radius: 50,
-              ),
+              if (!userController.hasInternet.value)
+                CircleAvatar(
+                  backgroundImage: NetworkImage(user['avatar']),
+                  radius: 50,
+                )
+              else
+                SizedBox(
+                  width: 100,
+                  height: 100,
+                ),
             ],
           ),
         ),
