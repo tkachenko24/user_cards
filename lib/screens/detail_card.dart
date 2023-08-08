@@ -29,7 +29,7 @@ class DetailCard extends StatelessWidget {
                   radius: 50,
                 )
               else
-                SizedBox(
+                const SizedBox(
                   width: 100,
                   height: 100,
                 ),
