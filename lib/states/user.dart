@@ -35,6 +35,8 @@ class UserController extends GetxController {
     if (usersDataString.isNotEmpty) {
       List<dynamic> data = jsonDecode(usersDataString);
       usersData.value = List<Map<String, dynamic>>.from(data);
+    } else {
+      fetchData();
     }
   }
 

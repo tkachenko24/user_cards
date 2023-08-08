@@ -11,8 +11,10 @@ class UserCards extends StatelessWidget {
       appBar: AppBar(title: const Text('User Cards')),
       body: Obx(() {
         if (_userController.usersData.isEmpty) {
-          return const Center(
-            child: CircularProgressIndicator(),
+          return NoConnectionScreen(
+            onRetry: () {
+              _userController.fetchData();
+            },
           );
         } else {
           return PageView.builder(

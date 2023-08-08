@@ -7,7 +7,6 @@ class NoConnectionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('No Internet Connection')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
